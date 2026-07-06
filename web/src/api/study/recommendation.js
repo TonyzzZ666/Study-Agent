@@ -1,0 +1,5 @@
+import request from "@/utils/request.js";
+
+export function getRecommendations() {
+    return request({ url: '/api/recommendations', method: 'get' })
+}

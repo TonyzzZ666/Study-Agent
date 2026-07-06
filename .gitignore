@@ -1,4 +1,10 @@
 *.pptx
 *.docx
 *.png
+*.pdf
 terminal
+ppt/
+node_modules/
+target/
+*.class
+.idea/
