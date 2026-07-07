@@ -72,8 +72,18 @@ const goRegister = () => {
   isLoading.value = true
   register(loginForm).then(res => {
     if (res.success) {
-      // 注册成功后自动登录
-      submitLogin(loginRef)
+      // 注册成功后直接调登录API，不走表单验证
+      login(loginForm).then(res2 => {
+        if (res2.success) {
+          store.token = res2.data.token
+          store.refreshToken = res2.data.refreshToken
+          store.userInfo = res2.data.userDto
+          routers.push({path: '/Layout'})
+        } else {
+          errorMsg(res2.msg)
+        }
+        isLoading.value = false
+      })
     } else {
       errorMsg(res.msg)
       isLoading.value = false

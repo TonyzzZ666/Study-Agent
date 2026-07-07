@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @create: 2021-11-27 13:10
  **/
 @Configuration
-@MapperScan("com.ems.system.mapper")
+@MapperScan({"com.ems.system.mapper", "com.ems.study.mapper"})
 public class MybatisPlusConfig {
 
     /**

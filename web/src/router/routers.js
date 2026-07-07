@@ -4,6 +4,10 @@ import Home from '@/views/Home.vue'
 
 export const routerMap = [
     {
+        path: '/',
+        redirect: '/login'
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/login.vue')

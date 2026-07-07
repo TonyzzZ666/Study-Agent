@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
+  <div class="home" v-loading="loading">
     <h2>📊 学习概览</h2>
-    <el-row :gutter="20" v-loading="loading">
+    <el-row :gutter="20">
       <el-col :span="6">
         <el-card shadow="hover"><div class="stat-num">{{ stats.total }}</div><div class="stat-label">总任务数</div></el-card>
       </el-col>
@@ -17,7 +17,7 @@
     </el-row>
 
     <h3 style="margin-top:30px;">⏰ 即将到期的任务</h3>
-    <el-table :data="upcoming" empty-text="暂无即将到期的任务 🎉" v-loading="upLoading">
+    <el-table :data="upcoming" empty-text="暂无即将到期的任务 🎉">
       <el-table-column prop="title" label="任务"></el-table-column>
       <el-table-column prop="deadline" label="截止时间" width="180"></el-table-column>
       <el-table-column prop="priority" label="优先级" width="100">
@@ -36,14 +36,18 @@ import { ref, onMounted } from 'vue'
 import { getStatistics } from '@/api/study/statistics.js'
 import { getUpcoming } from '@/api/study/task.js'
 
-const loading = ref(false), upLoading = ref(false)
+const loading = ref(false)
 const stats = ref({ total: 0, done: 0, rate: 0, checkDays: 0 })
 const upcoming = ref([])
 
 onMounted(() => {
-  loading.value = true; upLoading.value = true
-  getStatistics().then(res => { if (res.success) stats.value = res.data; loading.value = false })
-  getUpcoming().then(res => { if (res.success) upcoming.value = res.data; upLoading.value = false })
+  loading.value = true
+  getStatistics().then(res => { if (res.success) stats.value = res.data })
+    .catch(() => {})
+    .finally(() => { loading.value = false })
+
+  getUpcoming().then(res => { if (res.success) upcoming.value = res.data })
+    .catch(() => {})
 })
 </script>
 

@@ -61,10 +61,10 @@ public class SecurityConstants {
     /**
      * token有效期2小时（当remember为false时）
      */
-    public static final Long TOKEN_EXPIRATION_TIME = 60 * 60 * 2L;
+    public static final Long TOKEN_EXPIRATION_TIME = 60 * 60 * 2 * 1000L;
 
     /**
      * token有效期为7天（当remember为true时）
      */
-    public static final Long TOKEN_EXPIRATION_REMEMBER_TIME = 60 * 60 * 24 * 7L;
+    public static final Long TOKEN_EXPIRATION_REMEMBER_TIME = 60 * 60 * 24 * 7 * 1000L;
 }

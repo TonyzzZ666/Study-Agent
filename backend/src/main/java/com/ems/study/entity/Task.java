@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 @Setter
@@ -30,6 +31,7 @@ public class Task extends BaseEntity {
     /** HIGH / MEDIUM / LOW */
     private String priority;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deadline;
 
     /** 是否需要复习提醒 */

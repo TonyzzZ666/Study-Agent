@@ -83,8 +83,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (user.getId() != null){
             sysUserMapper.updateById(user);
         } else {
-            //  初始化用户密码.默认111111
-            user.setPassword(passwordEncoder.encode(CommonConstants.DEFAULT_PASSWORD));
+            //  加密用户输入的密码
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             sysUserMapper.insert(user);
         }
 
@@ -196,8 +196,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (userDto.getId() != null){
             wrapper.ne(SysUser::getId, userDto.getId());
         }
-        if (StringUtil.isNotBlank(userDto.getUsername()) && StringUtil.isNotBlank(userDto.getNickName())){
-            wrapper.and(w -> w.eq(SysUser::getUsername, userDto.getUsername()).or().eq(SysUser::getNickName, userDto.getNickName()));
+        if (StringUtil.isNotBlank(userDto.getUsername())){
+            wrapper.eq(SysUser::getUsername, userDto.getUsername());
+        }
+        if (StringUtil.isNotBlank(userDto.getNickName())){
+            wrapper.or().eq(SysUser::getNickName, userDto.getNickName());
         }
         long count = sysUserMapper.selectCount(wrapper);
         if (count > 0){

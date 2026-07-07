@@ -30,7 +30,7 @@ import {ElMessageBox} from "element-plus";
 
 const store = useStore()
 
-const username = ref(store.userInfo.nickName)
+const username = ref(store.userInfo?.nickName || '用户')
 
 const dialogVisible = ref(false)
 

@@ -5,7 +5,7 @@ import {errorMsg} from "./message.js";
 
 //  创建axios实例
 const instance = axios.create({
-    baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_URL : '/',
+    baseURL: 'http://localhost:8415',
     timeout: 60000   //  请求超时时间（毫秒）
 })
 
@@ -48,24 +48,9 @@ instance.interceptors.response.use(
             if (code){
                 //  如果是未授权
                 if (code === 401){
-                    //  说明token过期，使用refreshToken对当前token进行刷新
-                    const refresh = store.refreshToken
-                    //  如果存在
-                    if (refresh){
-                        return againRequest(refresh, error)
-                    //  否则
-                    } else {
-                        //  清空token
-                        store.tokenAction(null)
-                        //  并跳转到登录页面，进行重新登录
-                        routers.push({
-                            path: '/login',
-                            query: {
-                                backto: routers.currentRoute.fullPath
-                            }
-                        })
-                    }
-                    //  如果是没有权限
+                    store.token = null
+                    store.refreshToken = null
+                    routers.push({path: '/login'})
                 } else if (code === 403){
                     //  直接跳转至401页面
                     routers.replace({path: '/401'})

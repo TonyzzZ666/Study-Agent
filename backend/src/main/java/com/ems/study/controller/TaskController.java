@@ -3,6 +3,8 @@ package com.ems.study.controller;
 import com.ems.common.utils.ResultUtil;
 import com.ems.study.entity.Task;
 import com.ems.study.service.TaskService;
+
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -40,6 +42,7 @@ public class TaskController extends ResultUtil {
         task.setUserId(getCurrentUserId());
         task.setStatus("TODO");
         if (task.getNeedReview() == null) task.setNeedReview(false);
+        if (task.getDeadline() == null) task.setDeadline(LocalDateTime.now().plusDays(7));
         taskService.save(task);
         return success(task);
     }

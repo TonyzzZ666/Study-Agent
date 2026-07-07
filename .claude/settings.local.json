@@ -5,7 +5,11 @@
       "Bash(git rm *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(rm -rf node_modules/.vite node_modules/.cache .vite dist)",
+      "Bash(pkill -f vite)",
+      "Bash(nohup npm run dev)",
+      "Read(//private/tmp/**)"
     ]
   }
 }
