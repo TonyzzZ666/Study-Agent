@@ -3,6 +3,12 @@ import request from "@/utils/request.js";
 export function doCheckIn(taskId) {
     return request({ url: `/checkin/${taskId}`, method: 'post' })
 }
+export function completeTask(taskId) {
+    return request({ url: `/checkin/complete/${taskId}`, method: 'put' })
+}
+export function getTodayCheckIns() {
+    return request({ url: '/checkin/today', method: 'get' })
+}
 export function getCheckInHistory() {
     return request({ url: '/checkin/history', method: 'get' })
 }

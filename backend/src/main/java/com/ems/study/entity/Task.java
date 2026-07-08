@@ -37,6 +37,9 @@ public class Task extends BaseEntity {
     /** 是否需要复习提醒 */
     private Boolean needReview;
 
+    /** 父任务ID（子任务用） */
+    private Long parentId;
+
     /** TODO / DONE */
     private String status;
 }
