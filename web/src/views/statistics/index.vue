@@ -137,7 +137,7 @@ onMounted(() => {
 
 <style scoped>
 .stats-page { padding: 10px; }
-.page-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.page-title { display: flex; align-items: center; gap: 8px; font-size: 27px; font-weight: 700; margin: -4px 0 10px; }
 .stat-card { margin-bottom: 12px; padding: 12px 16px; }
 .stat-card h3 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
 .stat-desc { color: #909399; margin: 6px 0 0; font-size: 14px; }

@@ -16,15 +16,15 @@
       </div>
     </div>
 
-    <el-table :data="displayTasks" v-loading="loading" style="margin-top:15px" :row-class-name="rowClass">
-      <el-table-column width="58" align="center">
+    <el-table :data="displayTasks" v-loading="loading" style="margin-top:15px;width:100%" :row-class-name="rowClass">
+      <el-table-column width="52" align="center">
         <template #default="s">
           <div :style="{ marginLeft: s.row.parentId ? '22px' : '0' }" class="circle" :class="{ done: s.row.status === 'DONE', closing: s.row._closing }" @click="complete(s.row)">
             <span v-if="s.row.status === 'DONE'" class="checkmark">✓</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="任务" :min-width="140">
+      <el-table-column label="任务" min-width="140">
         <template #default="s">
           <div class="task-cell" :class="{ closing: s.row._closing }">
             <span class="task-title" :class="{ 'done-text': s.row.status === 'DONE' }" :title="s.row.title" :style="{ marginLeft: s.row.parentId ? '22px' : '0' }">{{ s.row.title }}</span>
@@ -39,7 +39,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="截止时间" width="220">
+      <el-table-column label="截止时间" min-width="170">
         <template #default="s">
           <span :style="{ color: isOverdue(s.row) ? '#F56C6C' : '', fontWeight: isOverdue(s.row) ? 'bold' : '' }">
             {{ s.row.deadline }}
@@ -47,12 +47,12 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="priority" label="优先级" width="90">
+      <el-table-column prop="priority" label="优先级" min-width="80">
         <template #default="s">
           <el-tag :type="s.row.priority==='HIGH'?'danger':s.row.priority==='MEDIUM'?'warning':'info'">{{ s.row.priority }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="240">
+      <el-table-column label="操作" min-width="200">
         <template #default="s">
           <div class="actions-row">
             <el-button size="small" type="success" v-if="s.row.status!=='DONE' && (s.row.checkinType || 'DAILY') !== 'NONE'" @click="doCheck(s.row)">
@@ -318,7 +318,7 @@ onMounted(async () => {
 
 <style scoped>
 .task-page { padding: 10px; }
-.page-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+.page-title { display: flex; align-items: center; gap: 8px; font-size: 27px; font-weight: 700; margin: -4px 0 10px; }
 .toolbar { display: flex; align-items: center; gap: 10px; }
 .toolbar-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .tab-btns { display: flex; gap: 0; margin-left: 10px; }
@@ -350,7 +350,7 @@ onMounted(async () => {
 
 .task-cell { display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: opacity 0.3s; padding: 2px 0; }
 .task-cell.closing { opacity: 0.3; }
-.task-title { font-weight: 500; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+.task-title { font-weight: 500; white-space: nowrap; }
 .desc-toggle { font-size: 12px; color: #409EFF; cursor: pointer; white-space: nowrap; user-select: none; }
 .desc-toggle:hover { color: #337ECC; }
 

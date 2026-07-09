@@ -1,20 +1,218 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 .login{
-    height: calc(100vh);
-    background-image: url("../image/background.jpg");
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0a2a1f 0%, #0d3326 25%, #0f3d2d 50%, #0b2e20 75%, #071e14 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-size: 100% 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.login::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(45,180,120,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+}
+
+.login::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(30,140,90,0.08) 0%, transparent 70%);
+    bottom: -80px; left: -80px;
+    pointer-events: none;
 }
 
 .form{
-    width: 300px;
-    height: 300px;
+    width: 460px;
+    background: linear-gradient(180deg, rgba(20,60,45,0.85) 0%, rgba(12,40,28,0.9) 100%);
+    padding: 46px 44px 36px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+        0 24px 64px rgba(0,0,0,0.5),
+        0 2px 8px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
     text-align: center;
-    background: white;
-    padding: 50px;
+    position: relative;
+    z-index: 1;
 }
 
-.button{
+.close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    font-size: 16px;
+    transition: all 0.2s;
+}
+.close-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+}
+
+.logo-wrap {
+    background: radial-gradient(ellipse at center, rgba(25,75,55,0.6) 0%, transparent 75%);
+    padding: 20px 30px;
+    border-radius: 50%;
+    margin: 0 auto 28px;
+    display: flex;
+    justify-content: center;
+}
+
+.logo-img {
+    width: auto;
+    height: auto;
+    max-width: 320px;
+    max-height: 180px;
+    display: block;
+    object-fit: contain;
+    mix-blend-mode: lighten;
+    filter: brightness(1.05) contrast(1.05);
+}
+
+.field-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrap .prefix-icon {
+    position: absolute;
+    left: 14px;
+    color: #999;
+    font-size: 16px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.input-wrap .suffix-icon {
+    position: absolute;
+    right: 14px;
+    color: #999;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.input-wrap input {
     width: 100%;
+    height: 48px;
+    padding: 0 42px;
+    border: none;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+
+.input-wrap input::placeholder {
+    color: #bbb;
+    font-size: 14px;
+}
+
+.input-wrap input:focus {
+    box-shadow: 0 0 0 2px rgba(45,200,120,0.5);
+}
+
+.login-btn {
+    width: 100%;
+    height: 46px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2dd4a0 0%, #15a36e 100%);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #3de0ae 0%, #1ab87a 100%);
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(45,210,150,0.4);
+}
+
+.login-btn:active { transform: scale(0.98); }
+
+.footer-links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer-text {
+    color: rgba(255,255,255,0.5);
+}
+
+.footer-links .signup-link {
+    color: #2a9d60;
+    font-weight: 600;
+    margin-left: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.footer-links .signup-link:hover {
+    color: #2dd4a0;
+    transform: scale(1.05);
+}
+
+.signup-form {
+    width: 500px !important;
+}
+
+/* 切换动画 */
+.form-swap-enter-active {
+    transition: all 0.45s ease-out;
+}
+.form-swap-leave-active {
+    transition: all 0.3s ease-in;
+    position: absolute;
+}
+.form-swap-enter-from {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.form-swap-leave-to {
+    opacity: 0;
+    transform: translateY(-16px);
 }

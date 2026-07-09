@@ -129,7 +129,7 @@ const onFileChange = (e) => {
 
 const saveProfile = () => {
   updateProfile(form.value).then(res => {
-    if (res && res.success) { store.userInfo = { ...store.userInfo, nickName: form.value.nickName }; successMsg('保存成功') }
+    if (res && res.success) { store.userInfo = { ...store.userInfo, nickName: form.value.nickName, signature: form.value.signature }; successMsg('保存成功') }
     else errorMsg(res?.msg || '保存失败')
   })
 }
@@ -156,7 +156,7 @@ const doLogout = () => {
 .header-left { display: flex; align-items: flex-start; gap: 18px; }
 .big-avatar {
   width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0;
-  background: #409EFF; color: #fff;
+  background: #3aad78; color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-size: 36px; font-weight: bold; cursor: pointer; overflow: hidden;
 }
@@ -171,8 +171,8 @@ const doLogout = () => {
 
 .tabs { display: flex; gap: 28px; border-bottom: 1px solid #e8e8e8; padding-bottom: 12px; margin-bottom: 24px; }
 .tabs span { font-size: 16px; color: #909399; cursor: pointer; padding-bottom: 12px; border-bottom: 2px solid transparent; margin-bottom: -13px; display: inline-flex; align-items: center; gap: 5px; }
-.tabs span:hover { color: #409EFF; }
-.tabs span.active { color: #409EFF; border-bottom-color: #409EFF; font-weight: 600; }
+.tabs span:hover { color: #3aad78; }
+.tabs span.active { color: #3aad78; border-bottom-color: #3aad78; font-weight: 600; }
 
 .tab-content { padding: 10px 0; }
 .field { margin-bottom: 24px; }
@@ -182,10 +182,10 @@ const doLogout = () => {
   border-radius: 12px !important; box-shadow: none !important;
   border: 1px solid #e0e0e0; padding: 8px 14px;
 }
-.round-input :deep(.el-input__wrapper:hover) { border-color: #409EFF; }
-.round-input :deep(.el-input__wrapper.is-focus) { border-color: #409EFF; box-shadow: 0 0 0 1px #409EFF !important; }
+.round-input :deep(.el-input__wrapper:hover) { border-color: #3aad78; }
+.round-input :deep(.el-input__wrapper.is-focus) { border-color: #3aad78; box-shadow: 0 0 0 1px #3aad78 !important; }
 .round-input :deep(.el-input__inner) { font-size: 16px; height: 24px; }
 
-.save-btn { margin-top: 10px; border-radius: 10px; padding: 10px 36px; font-size: 15px; }
+.save-btn { margin-top: 10px; border-radius: 10px; padding: 12px 40px; font-size: 16px; }
 .logout-tab { text-align: center; padding-top: 20px; }
 </style>

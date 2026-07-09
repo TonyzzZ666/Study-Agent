@@ -118,7 +118,7 @@ const doCheckFromHome = (row) => {
 
 <style scoped>
 .home { padding: 10px; }
-.page-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.page-title { display: flex; align-items: center; gap: 8px; font-size: 27px; font-weight: 700; margin: -4px 0 10px; }
 .stat-num { font-size: 36px; font-weight: bold; text-align: center; }
 .stat-label { text-align: center; color: #909399; margin-top: 8px; }
 .click-card { cursor: pointer; transition: transform 0.15s; }
@@ -126,7 +126,8 @@ const doCheckFromHome = (row) => {
 .upcoming-table :deep(.el-table__row) { cursor: pointer; }
 .upcoming-table :deep(.el-table__row:hover) { background-color: #f5f7fa; }
 .upcoming-table { height: auto !important; max-height: none !important; }
-.upcoming-table :deep(.closing-row) { opacity: 0.3; filter: grayscale(1); transition: all 0.8s ease; }
+.upcoming-table :deep(.el-table__row) { height: 52px; }
 .upcoming-table :deep(.el-table__body-wrapper .el-table__row) { transition: transform 0.3s ease; }
+.upcoming-table :deep(.closing-row) { opacity: 0.3; filter: grayscale(1); transition: all 0.8s ease; }
 .up-task-title { font-size: 16px; font-weight: 700; }
 </style>

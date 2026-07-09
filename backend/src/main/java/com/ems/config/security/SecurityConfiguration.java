@@ -67,7 +67,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/", "index.html", "/favicon.ico", "/auth/code").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/js/**", "/fonts/**", "/img/**", "/css/**").permitAll()
+                        .requestMatchers("/js/**", "/fonts/**", "/img/**", "/css/**", "/assets/**", "/JADElogo.png", "/JADEbackground.png", "/logo.png", "/logo1.png", "/logo2.png", "/logo3.png", "/vite.svg").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 //  配置跨域

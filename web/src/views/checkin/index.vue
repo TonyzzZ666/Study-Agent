@@ -74,7 +74,7 @@ onMounted(() => {
 
 <style scoped>
 .checkin-page { padding: 10px; }
-.page-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.page-title { display: flex; align-items: center; gap: 8px; font-size: 27px; font-weight: 700; margin: -4px 0 10px; }
 .section-title { display: flex; align-items: center; gap: 6px; font-size: 16px; margin: 20px 0 4px; }
 .empty-hint { text-align: center; color: #C0C4CC; font-size: 15px; padding: 30px 0; }
 .auto-height { height: auto !important; max-height: none !important; font-size: 15px; }

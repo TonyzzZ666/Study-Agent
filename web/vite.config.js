@@ -6,12 +6,13 @@ export default defineConfig({
     plugins: [vue()],
     base: '/',         // 相当于 publicPath
     build: {
-        outDir: '../src/main/resources/dist'          // 相当于 outputDir
+        outDir: '../backend/src/main/resources/dist'          // 相当于 outputDir
     },
     server: {
         port: 3000,
         open: true,
         strictPort: true,
+        allowedHosts: ['.ngrok-free.dev', '.ngrok-free.app'],
         proxy: {
             '/api': {
                 target: 'http://localhost:8415',

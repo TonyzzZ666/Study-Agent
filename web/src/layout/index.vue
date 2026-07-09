@@ -1,7 +1,7 @@
 <template>
   <el-container>
-    <el-aside v-model:width="width">
-      <Aside v-model:width="width"></Aside>
+    <el-aside style="width:auto;">
+      <Aside></Aside>
     </el-aside>
     <el-container>
       <el-header>
