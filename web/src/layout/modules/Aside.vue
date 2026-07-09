@@ -106,8 +106,8 @@ const toggleCollapse = () => {
   height: 60px; cursor: pointer; transition: background 0.2s;
   padding: 0 16px 0 12px; position: relative;
 }
-.logo-trigger:hover { background: rgba(255,255,255,0.06); }
-.logo-trigger:active { background: rgba(255,255,255,0.1); }
+.logo-trigger:hover { background: rgba(0,0,0,0.12); }
+.logo-trigger:active { background: rgba(0,0,0,0.2); }
 .logo-img { height: 34px; object-fit: contain; }
 .collapse-arrow {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
@@ -133,5 +133,6 @@ const toggleCollapse = () => {
 .user-info { display: flex; flex-direction: column; min-width: 0; }
 .user-name { color: #fff; font-size: 14px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .user-sig { color: #909399; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-:deep(.el-menu-item) { font-size: 15px !important; height: 48px !important; line-height: 48px !important; }
+:deep(.el-menu-item) { font-size: 17px !important; font-weight: 600; height: 56px !important; line-height: 56px !important; }
+:deep(.el-menu-item .el-icon) { font-size: 22px !important; }
 </style>
