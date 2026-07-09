@@ -58,6 +58,15 @@ public class SysUser extends BaseEntity implements Serializable {
      */
     private String nickName;
 
+    /** 头像（URL或base64） */
+    private String avatar;
+
+    /** 个性签名 */
+    private String signature;
+
+    /** 手机号 */
+    private String phone;
+
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

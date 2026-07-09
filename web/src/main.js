@@ -6,6 +6,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn.mjs'
 import App from './App.vue'
 import router from "./router/routers.js";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import './assets/css/public.css'
 import './assets/iconfont/iconfont.css'
@@ -22,5 +23,10 @@ const app = createApp(App)
 app.use(pinia)
 app.use(ElementPlus, {locale: zhCn, size: 'small'})
 app.use(router)
+
+// 全局注册Element Plus图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 
 app.mount('#app')

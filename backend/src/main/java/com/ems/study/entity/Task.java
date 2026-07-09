@@ -40,6 +40,12 @@ public class Task extends BaseEntity {
     /** 父任务ID（子任务用） */
     private Long parentId;
 
+    /** 打卡频率：DAILY/WEEKDAYS/NONE/CUSTOM */
+    private String checkinType;
+
+    /** CUSTOM模式的打卡日，逗号分隔 1-7 (1=周一) */
+    private String checkinDays;
+
     /** TODO / DONE */
     private String status;
 }

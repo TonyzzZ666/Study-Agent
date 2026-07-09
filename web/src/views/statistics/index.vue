@@ -1,61 +1,135 @@
 <template>
   <div class="stats-page">
-    <h2>📊 数据统计</h2>
-    <!-- 进度条 -->
-    <el-card style="margin-bottom:20px">
+    <h2 class="page-title"><el-icon><DataAnalysis /></el-icon> 数据统计</h2>
+    <el-card class="stat-card">
       <h3>任务完成进度</h3>
-      <el-progress :percentage="stats.rate" :color="'#67C23A'" :stroke-width="20" :text-inside="true"></el-progress>
-      <p style="color:#909399;margin-top:10px">{{ stats.done }} / {{ stats.total }} 已完成，累计打卡 {{ stats.checkDays }} 天</p>
+      <el-progress :percentage="stats.rate" :color="'#67C23A'" :stroke-width="18" :text-inside="true"></el-progress>
+      <p class="stat-desc">{{ stats.done }} / {{ stats.total }} 已完成，累计打卡 {{ stats.checkDays }} 天</p>
     </el-card>
 
-    <!-- 统计表 -->
-    <el-card style="margin-bottom:20px">
-      <h3>每日统计（近7天）</h3>
-      <el-table :data="stats.dailyStats || []" v-loading="loading">
-        <el-table-column prop="date" label="日期" width="130"></el-table-column>
-        <el-table-column prop="created" label="新增任务" width="100"></el-table-column>
-        <el-table-column prop="completed" label="完成数" width="100"></el-table-column>
-      </el-table>
+    <el-card class="stat-card">
+      <h3>今日打卡进度</h3>
+      <el-progress :percentage="checkinRate" :color="'#409EFF'" :stroke-width="18" :text-inside="true"></el-progress>
+      <p class="stat-desc">{{ stats.todayChecked || 0 }} / {{ stats.todoCount || stats.total }} 个任务今日已打卡</p>
     </el-card>
 
-    <!-- 打卡日历 -->
-    <el-card>
-      <h3>打卡日历（本月）</h3>
-      <div ref="calendarChart" style="width:100%;height:200px;"></div>
+    <!-- 年历打卡热力图 -->
+    <el-card class="stat-card">
+      <h3>打卡年历</h3>
+      <div class="year-cal">
+        <!-- 月份行 -->
+        <div class="ycal-months">
+          <span v-for="m in ycalMonths" :key="m.label" class="ycal-month-label">{{ m.label }}</span>
+        </div>
+        <!-- 主体：星期行 x 周列 -->
+        <div class="ycal-body">
+          <div class="ycal-weekdays">
+            <span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span>Sun</span>
+          </div>
+          <div class="ycal-grid">
+            <div v-for="(col, ci) in ycalCols" :key="ci" class="ycal-col">
+              <div v-for="(cell, ri) in col" :key="ri"
+                   class="ycal-cell"
+                   :class="{ filled: cell.count > 0 }"
+                   :style="{ backgroundColor: cellColor(cell.count) }"
+                   :title="cell.date + ': ' + cell.count + '次打卡'">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 图例 -->
+        <div class="ycal-legend">
+          <span>Less</span>
+          <span class="leg-swatch" style="background:#fff;border:1px solid #eee"></span>
+          <span class="leg-swatch" style="background:#c6e48b"></span>
+          <span class="leg-swatch" style="background:#7bc96f"></span>
+          <span class="leg-swatch" style="background:#239a3b"></span>
+          <span class="leg-swatch" style="background:#196127"></span>
+          <span>More</span>
+        </div>
+      </div>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { getStatistics } from '@/api/study/statistics.js'
-import { getCalendarData } from '@/api/study/checkin.js'
+import { getYearCalendar } from '@/api/study/checkin.js'
 import * as echarts from 'echarts'
 
-const stats = ref({ total: 0, done: 0, rate: 0, checkDays: 0, dailyStats: [] })
+const stats = ref({ total: 0, done: 0, rate: 0, checkDays: 0, todayChecked: 0, todoCount: 0, dailyStats: [] })
 const loading = ref(false)
 const calendarChart = ref(null)
+const checkinRate = computed(() => {
+  const todo = stats.value.todoCount || stats.value.total || 1
+  return Math.round((stats.value.todayChecked || 0) / todo * 100)
+})
+
+// 年历数据
+const ycalData = ref({})
+const ycalMonths = ref([])
+const ycalCols = ref([])
+
+const cellColor = (count) => {
+  if (!count || count === 0) return '#fff'
+  if (count <= 1) return '#c6e48b'
+  if (count <= 2) return '#7bc96f'
+  if (count <= 4) return '#239a3b'
+  return '#196127'
+}
+
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+const dayNames = ['Mon','','Wed','','Fri','','']
+
+const buildYearCal = () => {
+  const now = new Date()
+  // 上个月 + 当前季度 = 4个月
+  const months = []
+  const cols = []
+  const data = ycalData.value
+
+  for (let m = 0; m < 12; m++) {
+    let y = now.getFullYear(), mo = now.getMonth() + 1 + m
+    if (mo < 1) { mo += 12; y-- }
+    if (mo > 12) { mo -= 12; y++ }
+    const label = monthNames[mo - 1]
+    months.push({ label, y, mo })
+
+    const daysInMonth = new Date(y, mo, 0).getDate()
+    // 每月第一个周一之前的空白 + 当月天数 → 分成周列
+    const firstDow = new Date(y, mo - 1, 1).getDay() || 7
+    let colWeek = []
+    // 前置空白
+    for (let d = 0; d < firstDow - 1; d++) colWeek.push({ date: '', count: 0 })
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+      colWeek.push({ date: dateStr, count: data[dateStr] || 0 })
+      if (colWeek.length === 7) {
+        cols.push([...colWeek])
+        colWeek = []
+      }
+    }
+    if (colWeek.length > 0) {
+      while (colWeek.length < 7) colWeek.push({ date: '', count: 0 })
+      cols.push([...colWeek])
+    }
+  }
+  ycalMonths.value = months
+  ycalCols.value = cols
+}
 
 onMounted(() => {
   loading.value = true
   getStatistics().then(res => { if (res.success) stats.value = res.data; loading.value = false })
 
   const now = new Date()
-  getCalendarData(now.getFullYear(), now.getMonth() + 1).then(res => {
-    if (res.success && res.data) {
-      nextTick(() => {
-        const chart = echarts.init(calendarChart.value)
-        const data = res.data.map(d => [d.date, d.count])
-        chart.setOption({
-          tooltip: { formatter: p => p.data[0] + ': ' + p.data[1] + '次打卡' },
-          visualMap: { min: 0, max: Math.max(...res.data.map(d => d.count), 1), type: 'piecewise',
-            orient: 'horizontal', left: 'center', top: 0,
-            pieces: [{ min: 1, color: '#C6E48B' }, { min: 0, color: '#EBEDF0' }] },
-          calendar: { range: [now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0')],
-            cellSize: ['auto', 20], dayLabel: { nameMap: 'ZH' }, monthLabel: { nameMap: 'ZH' } },
-          series: [{ type: 'heatmap', coordinateSystem: 'calendar', data: data }]
-        })
-      })
+  let fromY = now.getFullYear(), fromM = now.getMonth() - 9  // 9个月前
+  if (fromM <= 0) { fromM += 12; fromY-- }
+  getYearCalendar(fromY, fromM, 12).then(res => {
+    if (res.success) {
+      ycalData.value = res.data
+      buildYearCal()
     }
   })
 })
@@ -63,4 +137,30 @@ onMounted(() => {
 
 <style scoped>
 .stats-page { padding: 10px; }
+.page-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.stat-card { margin-bottom: 12px; padding: 12px 16px; }
+.stat-card h3 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+.stat-desc { color: #909399; margin: 6px 0 0; font-size: 14px; }
+
+.cal-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px; }
+.cal-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 15px; }
+.cal-table th { padding: 8px; color: #909399; font-weight: 600; }
+.cal-table td { padding: 8px; border-radius: 6px; cursor: default; }
+.cal-table td.other { color: #d0d0d0; }
+.cal-table td.today { background: #409EFF; color: #fff; font-weight: 700; border-radius: 50%; }
+.cal-table td.today .cal-day { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
+.cal-day { display: inline-block; }
+
+.year-cal { font-size: 12px; }
+.ycal-months { display: flex; margin-left: 32px; margin-bottom: 4px; }
+.ycal-month-label { flex: 1; text-align: center; font-size: 11px; color: #909399; }
+.ycal-body { display: flex; }
+.ycal-weekdays { display: flex; flex-direction: column; justify-content: space-around; width: 26px; padding-right: 6px; }
+.ycal-weekdays span { font-size: 10px; color: #909399; height: 14px; line-height: 14px; }
+.ycal-grid { display: flex; overflow-x: auto; flex: 1; gap: 3px; }
+.ycal-col { display: flex; flex-direction: column; flex: 1; min-width: 14px; max-width: 22px; gap: 3px; }
+.ycal-cell { width: 100%; aspect-ratio: 1; border-radius: 3px; background: #fff; border: 1px solid #eee; }
+.ycal-cell.filled { border: 1px solid rgba(0,0,0,0.1); }
+.ycal-legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 8px; font-size: 11px; color: #909399; }
+.leg-swatch { width: 12px; height: 12px; border-radius: 2px; }
 </style>

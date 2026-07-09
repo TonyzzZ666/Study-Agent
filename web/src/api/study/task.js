@@ -15,3 +15,6 @@ export function deleteTask(id) {
 export function getUpcoming() {
     return request({ url: '/tasks/upcoming', method: 'get' })
 }
+export function getTodayCheckinTasks() {
+    return request({ url: '/tasks/today-checkin', method: 'get' })
+}

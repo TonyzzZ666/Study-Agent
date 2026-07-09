@@ -68,4 +68,10 @@ public class TaskController extends ResultUtil {
     public ResponseEntity<Object> upcoming() {
         return success(taskService.getUpcoming(getCurrentUserId()));
     }
+
+    /** 今日需打卡的任务 */
+    @GetMapping("/today-checkin")
+    public ResponseEntity<Object> todayCheckin() {
+        return success(taskService.getTodayCheckinTasks(getCurrentUserId()));
+    }
 }

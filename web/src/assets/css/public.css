@@ -1,4 +1,11 @@
 /*button*/
+.el-button { border-radius: 8px !important; }
+
+/*global font*/
+body { font-size: 15px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+
+/*input height*/
+.el-input .el-input__inner { height: 38px; line-height: 38px; font-size: 15px; }
 
 /*table*/
 .el-table{
@@ -16,6 +23,8 @@
     width: 100%;
 }
 /*dialog*/
+.el-dialog { border-radius: 20px !important; }
+.el-dialog__header { font-weight: 700; font-size: 18px; padding: 20px 20px 10px; }
 .el-dialog__body{
     height: 350px;
     max-height: 350px;
@@ -26,6 +35,7 @@
 .el-dialog__footer{
     text-align: center;
 }
+.el-dialog .el-form-item__label { font-weight: 700; font-size: 15px; }
 
 /*search*/
 .searchDiv{

@@ -15,3 +15,6 @@ export function getCheckInHistory() {
 export function getCalendarData(year, month) {
     return request({ url: '/checkin/calendar', method: 'get', params: { year, month } })
 }
+export function getYearCalendar(fromYear, fromMonth, months) {
+    return request({ url: '/checkin/year-calendar', method: 'get', params: { fromYear, fromMonth, months } })
+}

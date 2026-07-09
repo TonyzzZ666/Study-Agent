@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form class="form" :model="loginForm" :rules="rules" ref="loginRef">
-      <h1>学习养成计划</h1>
+      <h1 style="font-weight:900; letter-spacing:6px;">JADE</h1>
       <el-form-item prop="username">
         <el-input type="text" v-model="loginForm.username" placeholder="请输入用户名" @keyup.enter="submitLogin(loginRef)">
           <template #prefix><span>👤</span></template>
@@ -27,6 +27,7 @@ import '@/assets/css/login.css'
 import {useStore} from "@/store/index.js";
 import routers from "@/router/routers.js";
 import {login, register} from "@/api/login/login.js";
+import {getProfile} from "@/api/login/profile.js";
 import {errorMsg} from "@/utils/message.js";
 import {ref, reactive} from 'vue'
 
@@ -54,6 +55,10 @@ const submitLogin = (loginRef) => {
           store.token = res.data.token
           store.refreshToken = res.data.refreshToken
           store.userInfo = res.data.userDto
+          // 拉取完整信息含头像
+          getProfile().then(p => {
+            if (p && p.success) store.userInfo = { ...store.userInfo, nickName: p.data.nickName, avatar: p.data.avatar, signature: p.data.signature }
+          })
           routers.push({path: '/Layout'})
         } else {
           errorMsg(res.msg)

@@ -13,8 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -153,18 +156,74 @@ public class CheckInController extends ResultUtil {
         return success(ids);
     }
 
-    /** 打卡历史 */
+    /** 打卡历史（含任务信息，自动清除已完成任务的记录） */
     @GetMapping("/history")
     public ResponseEntity<Object> history() {
         Long userId = getCurrentUserId();
+
+        // 清除已完成任务及其子任务的打卡记录
+        List<Task> doneTasks = taskService.listByUser(userId, "DONE", null);
+        for (Task t : doneTasks) {
+            LambdaQueryWrapper<CheckIn> dw = new LambdaQueryWrapper<>();
+            dw.eq(CheckIn::getTaskId, t.getId());
+            checkInService.remove(dw);
+            // 同时也清除子任务的打卡记录
+            List<Task> subs = taskService.list(new LambdaQueryWrapper<Task>().eq(Task::getParentId, t.getId()));
+            for (Task s : subs) {
+                LambdaQueryWrapper<CheckIn> sw = new LambdaQueryWrapper<>();
+                sw.eq(CheckIn::getTaskId, s.getId());
+                checkInService.remove(sw);
+            }
+        }
+        // 清除孤儿打卡记录（任务已删除的）
+        LambdaQueryWrapper<CheckIn> orphan = new LambdaQueryWrapper<>();
+        orphan.eq(CheckIn::getUserId, userId);
+        for (CheckIn c : checkInService.list(orphan)) {
+            if (taskService.getById(c.getTaskId()) == null) {
+                checkInService.removeById(c.getId());
+            }
+        }
+
         LambdaQueryWrapper<CheckIn> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CheckIn::getUserId, userId).orderByDesc(CheckIn::getCheckTime);
-        return success(checkInService.list(wrapper));
+        List<CheckIn> list = checkInService.list(wrapper);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (CheckIn c : list) {
+            Task t = taskService.getById(c.getTaskId());
+            Map<String, Object> item = new java.util.LinkedHashMap<>();
+            item.put("id", c.getId());
+            item.put("taskId", c.getTaskId());
+            item.put("checkTime", c.getCheckTime());
+            item.put("title", t != null ? t.getTitle() : "已删除");
+            item.put("deadline", t != null ? t.getDeadline() : null);
+            item.put("priority", t != null ? t.getPriority() : "MEDIUM");
+            item.put("status", t != null ? t.getStatus() : "DONE");
+            result.add(item);
+        }
+        return success(result);
     }
 
     /** 打卡日历数据 */
     @GetMapping("/calendar")
     public ResponseEntity<Object> calendar(@RequestParam int year, @RequestParam int month) {
         return success(checkInService.getCalendarData(getCurrentUserId(), year, month));
+    }
+
+    /** 年历数据（从某年某月开始，往后N个月） */
+    @GetMapping("/year-calendar")
+    public ResponseEntity<Object> yearCalendar(@RequestParam int fromYear, @RequestParam int fromMonth, @RequestParam(defaultValue = "13") int months) {
+        Long userId = getCurrentUserId();
+        Map<String, Long> result = new java.util.LinkedHashMap<>();
+        LocalDate start = LocalDate.of(fromYear, fromMonth, 1);
+        LocalDate end = start.plusMonths(months);
+        LambdaQueryWrapper<CheckIn> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CheckIn::getUserId, userId)
+               .between(CheckIn::getCheckTime, start.atStartOfDay(), end.atStartOfDay());
+        List<CheckIn> list = checkInService.list(wrapper);
+        for (CheckIn c : list) {
+            String key = c.getCheckTime().toLocalDate().toString();
+            result.merge(key, 1L, Long::sum);
+        }
+        return success(result);
     }
 }

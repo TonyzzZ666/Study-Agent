@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,9 +37,9 @@ public class StatisticsController extends ResultUtil {
     public ResponseEntity<Object> getStatistics() {
         Long userId = getCurrentUserId();
 
-        // 总任务数 & 完成数
+        // 总任务数（只计未完成的）& 完成数
         List<Task> allTasks = taskService.listByUser(userId, null, null);
-        long total = allTasks.size();
+        long total = allTasks.stream().filter(t -> !"DONE".equals(t.getStatus())).count();
         long done = allTasks.stream().filter(t -> "DONE".equals(t.getStatus())).count();
 
         // 完成率
@@ -47,12 +48,18 @@ public class StatisticsController extends ResultUtil {
         // 打卡天数
         LambdaQueryWrapper<CheckIn> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CheckIn::getUserId, userId);
-        long checkDays = checkInService.list(wrapper).stream()
+        List<CheckIn> allCheckins = checkInService.list(wrapper);
+        long checkDays = allCheckins.stream()
                 .map(c -> c.getCheckTime().toLocalDate())
                 .distinct().count();
 
         // 每日任务添加数 & 完成数（最近7天）
         LocalDate today = LocalDate.now();
+
+        // 今日打卡任务数
+        long todayChecked = allCheckins.stream()
+                .filter(c -> c.getCheckTime().toLocalDate().equals(today))
+                .map(CheckIn::getTaskId).distinct().count();
         List<Map<String, Object>> dailyStats = new ArrayList<>();
         for (int i = 6; i >= 0; i--) {
             LocalDate date = today.minusDays(i);
@@ -79,6 +86,9 @@ public class StatisticsController extends ResultUtil {
         result.put("done", done);
         result.put("rate", Math.round(rate * 10) / 10.0);
         result.put("checkDays", checkDays);
+        result.put("todayChecked", todayChecked);
+        long todoCount = total - done;
+        result.put("todoCount", todoCount);
         result.put("dailyStats", dailyStats);
 
         return success(result);
