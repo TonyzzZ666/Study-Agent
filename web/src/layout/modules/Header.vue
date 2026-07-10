@@ -9,5 +9,5 @@
 </script>
 
 <style scoped>
-.header-logo { height: 42px; display: block; margin-right: 8px; margin-top: 4px; }
+.header-logo { height: 42px; display: block; margin-right: 8px; margin-top: 20px; }
 </style>

@@ -20,6 +20,10 @@
         <el-icon><List /></el-icon>
         <template #title>任务管理</template>
       </el-menu-item>
+      <el-menu-item route="/countdown" index="倒数日" @click="openTab('倒数日', '/countdown')">
+        <el-icon><Timer /></el-icon>
+        <template #title>倒数日</template>
+      </el-menu-item>
       <el-menu-item index="打卡记录" @click="goCheckin">
         <el-icon><CircleCheck /></el-icon>
         <template #title>打卡记录</template>
@@ -96,7 +100,7 @@ const toggleCollapse = () => {
 </script>
 
 <style scoped>
-.aside-wrap { height: 100%; display: flex; flex-direction: column; width: 210px; transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+.aside-wrap { height: 100%; display: flex; flex-direction: column; width: 250px; transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
 .aside-wrap.collapsed { width: 64px; }
 .menu { flex: 1; overflow-y: auto; overflow-x: hidden; border-right: none !important; }
 .el-menu { border-right: none !important; }
@@ -141,7 +145,7 @@ const toggleCollapse = () => {
 .collapse-btn:active { background: rgba(255,255,255,0.14); }
 
 .user-entry {
-  display: flex; align-items: center; gap: 10px; padding: 12px;
+  display: flex; align-items: center; gap: 12px; padding: 16px 14px;
   background: rgba(8, 35, 22, 0.95); cursor: pointer; transition: all 0.2s;
   box-sizing: border-box; width: 100%;
   box-shadow: 0 -2px 12px rgba(0,0,0,0.3), 0 -1px 3px rgba(0,0,0,0.2);
@@ -149,12 +153,12 @@ const toggleCollapse = () => {
 }
 .user-entry:hover { background: rgba(12, 45, 28, 0.95); }
 .user-avatar {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
   background: #909399; color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 17px; font-weight: bold;
+  font-size: 22px; font-weight: bold;
 }
 .user-info { display: flex; flex-direction: column; min-width: 0; }
-.user-name { color: #fff; font-size: 14px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.user-sig { color: #909399; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-name { color: #fff; font-size: 16px; font-weight: 700; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-sig { color: #909399; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>

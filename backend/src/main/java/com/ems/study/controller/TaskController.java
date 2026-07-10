@@ -4,7 +4,10 @@ import com.ems.common.utils.ResultUtil;
 import com.ems.study.entity.Task;
 import com.ems.study.service.TaskService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -73,5 +76,19 @@ public class TaskController extends ResultUtil {
     @GetMapping("/today-checkin")
     public ResponseEntity<Object> todayCheckin() {
         return success(taskService.getTodayCheckinTasks(getCurrentUserId()));
+    }
+
+    /** 今日需完成的任务（截止日期今天+无需打卡） */
+    @GetMapping("/today-complete")
+    public ResponseEntity<Object> todayComplete() {
+        Long userId = getCurrentUserId();
+        LocalDate today = LocalDate.now();
+        List<Task> all = taskService.listByUser(userId, null, null);
+        List<Task> result = all.stream()
+            .filter(t -> t.getDeadline() != null)
+            .filter(t -> t.getDeadline().toLocalDate().equals(today))
+            .filter(t -> "NONE".equals(t.getCheckinType()) || t.getCheckinType() == null)
+            .collect(Collectors.toList());
+        return success(result);
     }
 }

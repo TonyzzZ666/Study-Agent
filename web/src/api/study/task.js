@@ -18,3 +18,6 @@ export function getUpcoming() {
 export function getTodayCheckinTasks() {
     return request({ url: '/tasks/today-checkin', method: 'get' })
 }
+export function getTodayCompleteTasks() {
+    return request({ url: '/tasks/today-complete', method: 'get' })
+}
