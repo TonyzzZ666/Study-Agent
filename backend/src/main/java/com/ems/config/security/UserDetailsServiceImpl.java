@@ -1,6 +1,7 @@
 package com.ems.config.security;
 
 import com.ems.common.exception.BadRequestException;
+import com.ems.system.entity.SysUser;
 import com.ems.system.entity.dto.JwtUserDto;
 import com.ems.system.entity.dto.UserDto;
 import com.ems.system.service.SysUserService;
@@ -19,15 +20,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final SysUserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto user;
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        UserDto user = null;
         try {
-            user = userService.loadByName(username);
+            SysUser sysUser = userService.findByEmail(loginId);
+            if (sysUser != null) {
+                user = userService.loadByName(sysUser.getUsername());
+            }
         } catch (BadRequestException e) {
-            throw new UsernameNotFoundException("用户名或密码错误", e);
+            throw new UsernameNotFoundException("邮箱或密码错误", e);
         }
         if (user == null) {
-            throw new UsernameNotFoundException("用户名或密码错误");
+            throw new UsernameNotFoundException("邮箱或密码错误");
         }
         if (!user.getEnabled()) {
             throw new BadRequestException("账号未激活！");

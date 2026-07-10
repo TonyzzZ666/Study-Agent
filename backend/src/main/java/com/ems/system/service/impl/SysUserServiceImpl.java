@@ -60,6 +60,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
     }
 
+    @Override
+    public SysUser findByEmail(String email) {
+        try {
+            QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+            wrapper.eq("email", email);
+            return sysUserMapper.selectOne(wrapper);
+        } catch (BadRequestException e) {
+            throw new BadRequestException(e.getMsg());
+        }
+    }
+
     /**
      * @param userDto
      * @Description: 编辑用户

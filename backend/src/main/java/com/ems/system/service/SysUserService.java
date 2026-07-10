@@ -26,6 +26,8 @@ public interface SysUserService extends IService<SysUser> {
     */
     SysUser findByName(String userName);
 
+    SysUser findByEmail(String email);
+
     /**
     * @Description: 编辑用户
     * @Param: [userDto]

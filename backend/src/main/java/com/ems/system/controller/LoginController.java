@@ -29,13 +29,14 @@ public class LoginController extends ResultUtil {
     private final SysUserService userService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    /** 用户登录（简化版，无验证码） */
+    /** 用户登录（支持邮箱或用户名） */
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UserDto userDto) {
         try {
-            SysUser user = userService.findByName(userDto.getUsername());
+            String email = userDto.getUsername(); // username字段实际传的是email
+            SysUser user = userService.findByEmail(email);
             if (user == null) {
-                return fail("用户名或密码错误");
+                return fail("邮箱或密码错误");
             }
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword());

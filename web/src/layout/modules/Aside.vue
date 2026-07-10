@@ -2,10 +2,15 @@
   <div class="aside-wrap" :class="{ collapsed: isCollapsed }">
     <el-menu :default-active="defaultActive" :unique-opened="true" router
              background-color="#0f3d2d" text-color="rgba(255,255,255,0.85)" active-text-color="#2dd4a0" class="menu">
-      <!-- Logo 触发区域 -->
-      <div class="logo-trigger" @click="toggleCollapse">
-        <img src="/logo2.png" class="logo-img" alt="JADE">
-        <el-icon v-if="!isCollapsed" class="collapse-arrow"><ArrowLeft /></el-icon>
+      <!-- Logo 区域 -->
+      <div class="logo-area">
+        <div v-if="isCollapsed" class="logo-trigger-wrap trigger" @click="toggleCollapse">
+          <el-icon class="expand-icon"><ArrowRight /></el-icon>
+        </div>
+        <img src="/logo2.png" class="logo-img" :class="{ fading: isCollapsed && hoverLogo }" alt="JADE" @mouseenter="hoverLogo = true" @mouseleave="hoverLogo = false">
+        <div v-if="!isCollapsed" class="collapse-btn" @click="toggleCollapse">
+          <el-icon><ArrowLeft /></el-icon>
+        </div>
       </div>
       <el-menu-item route="/home" index="首页" @click="openTab('首页', '/home')">
         <el-icon><HomeFilled /></el-icon>
@@ -45,6 +50,7 @@ import { getProfile } from "@/api/login/profile.js";
 
 const store = useStore()
 const isCollapsed = ref(false)
+const hoverLogo = ref(false)
 
 const loadAvatar = async () => {
   if (!store.token) return
@@ -94,27 +100,41 @@ const toggleCollapse = () => {
 .aside-wrap.collapsed :deep(.el-menu-item) { padding-left: 20px !important; }
 .aside-wrap.collapsed :deep(.el-menu-item .el-icon) { margin-right: 30px !important; }
 :deep(.el-menu-item) {
-  font-size: 15px !important; height: 48px !important; line-height: 48px !important;
+  font-size: 17px !important; font-weight: 600; height: 56px !important; line-height: 56px !important;
   white-space: nowrap; overflow: hidden;
 }
+:deep(.el-menu-item .el-icon) { font-size: 22px !important; }
 :deep(.el-menu-item .el-tooltip__trigger) { display: flex; align-items: center; }
 :deep(.el-menu-item span) { transition: opacity 0.35s ease; }
 .aside-wrap.collapsed :deep(.el-menu-item .el-tooltip__trigger span) { opacity: 0; }
 
-.logo-trigger {
-  display: flex; align-items: center; justify-content: flex-start;
-  height: 60px; cursor: pointer; transition: background 0.2s;
-  padding: 0 16px 0 12px; position: relative;
+.logo-area {
+  display: flex; align-items: center; justify-content: flex-end;
+  height: 60px; padding: 0 12px; position: relative;
 }
-.logo-trigger:hover { background: rgba(0,0,0,0.12); }
-.logo-trigger:active { background: rgba(0,0,0,0.2); }
-.logo-img { height: 34px; object-fit: contain; }
-.collapse-arrow {
-  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-  color: rgba(255,255,255,0.4); font-size: 14px;
-  transition: color 0.2s;
+.logo-img { height: 26px; object-fit: contain; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); }
+
+.logo-trigger-wrap.trigger {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.2s; position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  z-index: 2;
 }
-.logo-trigger:hover .collapse-arrow { color: rgba(255,255,255,0.8); }
+.logo-trigger-wrap.trigger:hover { background: rgba(255,255,255,0.08); }
+.logo-trigger-wrap.trigger:active { background: rgba(255,255,255,0.14); }
+
+.logo-img { transition: opacity 0.25s ease; }
+.logo-img.fading { opacity: 0; }
+.expand-icon { color: rgba(255,255,255,0.6); font-size: 16px; }
+
+.collapse-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,0.6); font-size: 16px;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.collapse-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+.collapse-btn:active { background: rgba(255,255,255,0.14); }
 
 .user-entry {
   display: flex; align-items: center; gap: 10px; padding: 12px;
@@ -133,6 +153,4 @@ const toggleCollapse = () => {
 .user-info { display: flex; flex-direction: column; min-width: 0; }
 .user-name { color: #fff; font-size: 14px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .user-sig { color: #909399; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-:deep(.el-menu-item) { font-size: 17px !important; font-weight: 600; height: 56px !important; line-height: 56px !important; }
-:deep(.el-menu-item .el-icon) { font-size: 22px !important; }
 </style>

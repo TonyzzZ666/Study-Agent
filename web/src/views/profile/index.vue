@@ -11,7 +11,7 @@
           <span class="header-sig clickable" @click="focusField('sigRef')" :title="form.signature">{{ form.signature || '写句座右铭鼓励一下自己吧！' }}</span>
         </div>
       </div>
-      <el-button circle class="close-btn" @click="goBack">✕</el-button>
+      <div class="back-link" @click="goBack"><el-icon><ArrowLeft /></el-icon> 返回</div>
     </div>
 
     <div class="tabs">
@@ -92,6 +92,9 @@ onMounted(async () => {
   if (res && res.success) {
     const u = res.data
     form.value = { nickName: u.nickName || u.username || '', signature: u.signature || '', email: u.email || '', phone: u.phone || '' }
+    // 默认填好用户名和邮箱
+    if (!form.value.nickName) form.value.nickName = u.username || ''
+    if (!form.value.email) form.value.email = u.email || ''
     store.userInfo = { ...store.userInfo, nickName: u.nickName || '', avatar: u.avatar || '' }
   }
 })
@@ -167,7 +170,8 @@ const doLogout = () => {
 .header-sig { font-size: 14px; color: #C0C4CC; margin-top: 4px; }
 .clickable { cursor: pointer; }
 .clickable:hover { opacity: 0.7; }
-.close-btn { border: none; font-size: 20px; color: #909399; flex-shrink: 0; }
+.back-link { display: flex; align-items: center; gap: 4px; font-size: 15px; color: #909399; cursor: pointer; flex-shrink: 0; transition: color 0.2s; }
+.back-link:hover { color: #3aad78; }
 
 .tabs { display: flex; gap: 28px; border-bottom: 1px solid #e8e8e8; padding-bottom: 12px; margin-bottom: 24px; }
 .tabs span { font-size: 16px; color: #909399; cursor: pointer; padding-bottom: 12px; border-bottom: 2px solid transparent; margin-bottom: -13px; display: inline-flex; align-items: center; gap: 5px; }
