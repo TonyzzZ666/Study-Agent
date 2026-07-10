@@ -31,6 +31,7 @@ export const routerMap = [
             { path: '/home', name: '首页', component: Home },
             { path: '/tasks', name: '任务管理', component: () => import('@/views/task/index.vue') },
             { path: '/checkin', name: '打卡记录', component: () => import('@/views/checkin/index.vue') },
+            { path: '/calendar', name: '月历', component: () => import('@/views/calendar/index.vue') },
             { path: '/statistics', name: '数据统计', component: () => import('@/views/statistics/index.vue') },
             { path: '/profile', name: '个人中心', component: () => import('@/views/profile/index.vue') }
         ]

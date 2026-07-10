@@ -55,8 +55,14 @@
       <el-table-column label="操作" min-width="200">
         <template #default="s">
           <div class="actions-row">
-            <el-button size="small" type="success" v-if="s.row.status!=='DONE' && (s.row.checkinType || 'DAILY') !== 'NONE'" @click="doCheck(s.row)">
+            <el-button size="small" type="danger" v-if="s.row.status!=='DONE' && isOverdue(s.row)" disabled>
+              已逾期
+            </el-button>
+            <el-button size="small" type="success" v-else-if="s.row.status!=='DONE' && (s.row.checkinType || 'DAILY') !== 'NONE'" @click="doCheck(s.row)">
               {{ checkedToday.has(s.row.id) ? '今日已打卡' : '打卡' }}
+            </el-button>
+            <el-button size="small" type="info" v-else-if="s.row.status!=='DONE' && (s.row.checkinType || 'DAILY') === 'NONE'" disabled>
+              无需打卡
             </el-button>
             <el-button size="small" @click="openDialog(s.row)">编辑</el-button>
             <el-popconfirm title="确定删除？" @confirm="delTask(s.row.id)"><template #reference>

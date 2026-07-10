@@ -155,8 +155,8 @@ onMounted(() => {
 .ycal-months { display: flex; margin-left: 32px; margin-bottom: 4px; }
 .ycal-month-label { flex: 1; text-align: center; font-size: 11px; color: #909399; }
 .ycal-body { display: flex; }
-.ycal-weekdays { display: flex; flex-direction: column; justify-content: space-around; width: 26px; padding-right: 6px; }
-.ycal-weekdays span { font-size: 10px; color: #909399; height: 14px; line-height: 14px; }
+.ycal-weekdays { display: grid; grid-template-rows: repeat(7, 1fr); width: 26px; padding-right: 6px; gap: 3px; padding-top: 2px; }
+.ycal-weekdays span { font-size: 10px; color: #909399; display: flex; align-items: center; }
 .ycal-grid { display: flex; overflow-x: auto; flex: 1; gap: 3px; }
 .ycal-col { display: flex; flex-direction: column; flex: 1; min-width: 14px; max-width: 22px; gap: 3px; }
 .ycal-cell { width: 100%; aspect-ratio: 1; border-radius: 3px; background: #fff; border: 1px solid #eee; }

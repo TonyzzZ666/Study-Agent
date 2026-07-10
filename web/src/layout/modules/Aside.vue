@@ -3,11 +3,11 @@
     <el-menu :default-active="defaultActive" :unique-opened="true" router
              background-color="#0f3d2d" text-color="rgba(255,255,255,0.85)" active-text-color="#2dd4a0" class="menu">
       <!-- Logo 区域 -->
-      <div class="logo-area">
+      <div class="logo-area" @mouseenter="hoverLogo = true" @mouseleave="hoverLogo = false">
         <div v-if="isCollapsed" class="logo-trigger-wrap trigger" @click="toggleCollapse">
           <el-icon class="expand-icon"><ArrowRight /></el-icon>
         </div>
-        <img src="/logo2.png" class="logo-img" :class="{ fading: isCollapsed && hoverLogo }" alt="JADE" @mouseenter="hoverLogo = true" @mouseleave="hoverLogo = false">
+        <img src="/logo2.png" class="logo-img" :class="{ fading: isCollapsed && hoverLogo }" alt="JADE">
         <div v-if="!isCollapsed" class="collapse-btn" @click="toggleCollapse">
           <el-icon><ArrowLeft /></el-icon>
         </div>
@@ -23,6 +23,10 @@
       <el-menu-item index="打卡记录" @click="goCheckin">
         <el-icon><CircleCheck /></el-icon>
         <template #title>打卡记录</template>
+      </el-menu-item>
+      <el-menu-item route="/calendar" index="月历" @click="openTab('月历', '/calendar')">
+        <el-icon><Calendar /></el-icon>
+        <template #title>月历</template>
       </el-menu-item>
       <el-menu-item route="/statistics" index="数据统计" @click="openTab('数据统计', '/statistics')">
         <el-icon><DataAnalysis /></el-icon>
@@ -125,12 +129,12 @@ const toggleCollapse = () => {
 
 .logo-img { transition: opacity 0.25s ease; }
 .logo-img.fading { opacity: 0; }
-.expand-icon { color: rgba(255,255,255,0.6); font-size: 16px; }
+.expand-icon { color: rgba(255,255,255,0.6); font-size: 20px; font-weight: 700; }
 
 .collapse-btn {
   width: 36px; height: 36px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: rgba(255,255,255,0.6); font-size: 16px;
+  cursor: pointer; color: rgba(255,255,255,0.6); font-size: 20px; font-weight: 700;
   transition: background 0.2s; flex-shrink: 0;
 }
 .collapse-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
